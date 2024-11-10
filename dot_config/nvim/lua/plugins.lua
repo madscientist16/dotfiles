@@ -61,6 +61,8 @@ now(function()
   end, { desc = '[S]earch [N]eovim files' })
 end)
 
+now(function() add({ source = 'tpope/vim-sleuth' }) end)
+
 -- Load later in a safe manner
 later(function() require('mini.comment').setup() end)
 later(function() require('mini.indentscope').setup() end)
