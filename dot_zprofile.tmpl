@@ -1,0 +1,26 @@
+# vim: set ft=zsh:
+
+{{ if eq .chezmoi.os "linux" -}}
+
+## ENVIRONMENT VARIABLES
+typeset -U path PATH
+path=($HOME/.local/bin $HOME/stl/prefix $HOME/.cargo/bin $path)
+export PATH
+export EDITOR="nvim"
+export VISUAL=$EDITOR
+export DIFFPROG="meld"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket" # for systemd ssh agent
+export WINEDLLOVERRIDES="winemenubuilder.exe=d"
+export STEAM_FORCE_DESKTOPUI_SCALING=1.5
+export __GL_SHADER_DISK_CACHE_SKIP_CLEANUP=1 # fix shader cache for nvidia?
+
+{{- else if eq .chezmoi.os "android" -}}
+
+## ENVIRONMENT VARIABLES
+typeset -U path PATH
+path=($HOME/.local/bin $path)
+export PATH
+export EDITOR="nvim"
+export VISUAL=$EDITOR
+
+{{- end }}

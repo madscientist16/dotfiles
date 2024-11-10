@@ -1,0 +1,10 @@
+README.md
+
+{{- if eq .chezmoi.os "android" -}}
+
+.config/*
+!.config/git
+!.config/nvim
+!.config/tealdeer
+
+{{- end }}

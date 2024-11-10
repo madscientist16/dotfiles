@@ -1,0 +1,114 @@
+# vim: set ft=zsh:
+
+## SETTINGS
+# Completion
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
+
+# History
+HISTSIZE=10000
+HISTFILE=$HOME/.zsh_history
+SAVEHIST=$HISTSIZE
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_save_no_dups
+
+# Misc
+setopt autocd
+setopt extendedglob
+
+# Plugins
+plugins_dir=$HOME/.local/share/zsh/plugins
+source $plugins_dir/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $plugins_dir/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $plugins_dir/zsh-history-substring-search/zsh-history-substring-search.zsh
+source $plugins_dir/powerlevel10k/powerlevel10k.zsh-theme
+source $HOME/.p10k.zsh
+
+## KEYBINDINGS
+typeset -g -A key
+
+key[Home]="${terminfo[khome]}"
+key[End]="${terminfo[kend]}"
+key[Backspace]="${terminfo[kbs]}"
+key[Delete]="${terminfo[kdch1]}"
+key[Up]="${terminfo[kcuu1]}"
+key[Down]="${terminfo[kcud1]}"
+key[Left]="${terminfo[kcub1]}"
+key[Right]="${terminfo[kcuf1]}"
+key[PageUp]="${terminfo[kpp]}"
+key[PageDown]="${terminfo[knp]}"
+key[Shift-Tab]="${terminfo[kcbt]}"
+key[Control-Left]="${terminfo[kLFT5]}"
+key[Control-Right]="${terminfo[kRIT5]}"
+
+[[ -n "${key[Home]}"      ]] && bindkey -- "${key[Home]}"       beginning-of-line
+[[ -n "${key[End]}"       ]] && bindkey -- "${key[End]}"        end-of-line
+[[ -n "${key[Backspace]}" ]] && bindkey -- "${key[Backspace]}"  backward-delete-char
+[[ -n "${key[Delete]}"    ]] && bindkey -- "${key[Delete]}"     delete-char
+[[ -n "${key[Up]}"        ]] && bindkey -- "${key[Up]}"         up-line-or-history
+[[ -n "${key[Down]}"      ]] && bindkey -- "${key[Down]}"       down-line-or-history
+[[ -n "${key[Up]}"        ]] && bindkey -- "${key[Up]}"         history-substring-search-up
+[[ -n "${key[Down]}"      ]] && bindkey -- "${key[Down]}"       history-substring-search-down
+[[ -n "${key[Left]}"      ]] && bindkey -- "${key[Left]}"       backward-char
+[[ -n "${key[Right]}"     ]] && bindkey -- "${key[Right]}"      forward-char
+[[ -n "${key[PageUp]}"    ]] && bindkey -- "${key[PageUp]}"     beginning-of-buffer-or-history
+[[ -n "${key[PageDown]}"  ]] && bindkey -- "${key[PageDown]}"   end-of-buffer-or-history
+[[ -n "${key[Shift-Tab]}" ]] && bindkey -- "${key[Shift-Tab]}"  reverse-menu-complete
+[[ -n "${key[Control-Left]}"  ]] && bindkey -- "${key[Control-Left]}"  backward-word
+[[ -n "${key[Control-Right]}" ]] && bindkey -- "${key[Control-Right]}" forward-word
+
+# Make sure the terminal is in application mode, when zle is
+# active. Only then are the values from $terminfo valid.
+if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+	autoload -Uz add-zle-hook-widget
+	function zle_application_mode_start { echoti smkx }
+	function zle_application_mode_stop { echoti rmkx }
+	add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
+	add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+fi
+
+{{ if eq .chezmoi.os "linux" -}}
+
+## ALIASES
+alias sudo='sudo ' # for using aliases with sudo
+alias ls='eza --icons=auto --group-directories-first'
+alias ll='eza -l --icons=auto --group-directories-first'
+alias la='eza -la --icons=auto --group-directories-first'
+alias sys='systemctl'
+alias sysu='systemctl --user'
+alias fire='firewall-cmd'
+alias chez='chezmoi'
+alias vim='nvim'
+alias lg='lazygit'
+alias venv='python3 -m venv'
+
+# Flatpak
+alias clean-flatpak='flatpak uninstall --unused'
+alias protontricks='flatpak run com.github.Matoking.protontricks'
+alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
+
+# Arch Linux specific
+alias update-mirrors='sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak \
+    && rate-mirrors --protocol https arch --max-delay 3600 | sudo tee /etc/pacman.d/mirrorlist'
+alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
+
+# Containers
+alias gen-oidc-client-id='podman run --rm authelia/authelia:latest authelia crypto rand --length 72 --charset rfc3986'
+alias gen-oidc-client-secret='podman run --rm authelia/authelia:latest authelia crypto hash generate argon2 --profile recommended --random --random.length 72 --random.charset rfc3986'
+alias gen-alphanumeric-string='podman run --rm authelia/authelia:latest authelia crypto rand --length 64 --charset alphanumeric'
+
+{{- else if eq .chezmoi.os "android" -}}
+
+## ALIASES
+alias ls='eza --icons=auto --group-directories-first'
+alias ll='eza -l --icons=auto --group-directories-first --no-user'
+alias la='eza -la --icons=auto --group-directories-first --no-user'
+alias chez='chezmoi'
+alias vim='nvim'
+alias lg='lazygit'
+alias venv='python3 -m venv'
+
+{{- end }}
+
+eval "$(zoxide init zsh --cmd cd)"
