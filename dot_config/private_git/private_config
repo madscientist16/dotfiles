@@ -8,11 +8,8 @@
 [commit]
 	gpgsign = true
 
-[includeIf "gitdir:~/.local/share/chezmoi/"]
+[includeIf "hasconfig:remote.*.url:*github.com*/**"]
 	path = ~/.config/git/github
 
-[includeIf "gitdir:~/Documents/github/"]
-	path = ~/.config/git/github
-
-[includeIf "gitdir:~/Documents/gitlab/"]
+[includeIf "hasconfig:remote.*.url:*gitlab.com*/**"]
 	path = ~/.config/git/gitlab

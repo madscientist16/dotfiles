@@ -1,5 +1,3 @@
-README.md
-
 {{- if eq .chezmoi.os "android" -}}
 
 .config/*
@@ -8,3 +6,5 @@ README.md
 !.config/tealdeer
 
 {{- end }}
+
+README.md
