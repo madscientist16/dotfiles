@@ -1,9 +1,15 @@
-{{- if eq .chezmoi.os "android" -}}
+{{ if eq .chezmoi.os "android" -}}
 
 .config/*
 !.config/git
 !.config/nvim
 !.config/tealdeer
+
+{{- end }}
+
+{{ if ne .chezmoi.os "android" -}}
+
+.termux
 
 {{- end }}
 
