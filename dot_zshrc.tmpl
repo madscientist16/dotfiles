@@ -1,5 +1,26 @@
 # vim: set ft=zsh:
 
+{{ if eq .chezmoi.os "linux" -}}
+
+# Start tmux when starting the terminal
+if [ -x "$(command -v tmux)" ] && [ -n "${DISPLAY}" ] && [ -z "${TMUX}" ]; then
+    exec tmux new-session -A
+fi
+
+{{- else if eq .chezmoi.os "android" -}}
+
+# Start tmux when starting the terminal
+if [ -x "$(command -v tmux)" ] && [ -z "${TMUX}" ]; then
+    exec tmux new-session -A
+fi
+
+# Show MOTD when tmux starts
+if [[ -f $PREFIX/etc/motd ]] && [[ -n $TMUX ]]; then
+    cat $PREFIX/etc/motd
+fi
+
+{{- end }}
+
 ## SETTINGS
 # Completion
 autoload -Uz compinit && compinit
