@@ -13,3 +13,8 @@
 
 [includeIf "hasconfig:remote.*.url:*gitlab.com*/**"]
 	path = ~/.config/git/gitlab
+
+# disable commit signing on tmp as a workaround for submit50 and check50 
+# remove this and cs50 file after I complete the course
+[includeIf "gitdir:**/tmp/**"]
+	path = ~/.config/git/cs50
