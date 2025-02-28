@@ -4,6 +4,9 @@
 [[ $- != *i* ]] && return
 
 ## SETTINGS
+# Prompt
+PS1='[\u@\h \W]\$ '
+
 # History
 HISTSIZE=10000
 HISTFILE=$HOME/.bash_history
@@ -34,19 +37,8 @@ alias lg='lazygit'
 alias venv='python3 -m venv'
 
 # Flatpak
-alias clean-flatpak='flatpak uninstall --unused'
 alias protontricks='flatpak run com.github.Matoking.protontricks'
 alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-
-# Arch Linux specific
-alias update-mirrors='sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak \
-    && rate-mirrors --protocol https arch --max-delay 3600 | sudo tee /etc/pacman.d/mirrorlist'
-alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
-
-# Containers
-alias gen-oidc-client-id='podman run --rm authelia/authelia:latest authelia crypto rand --length 72 --charset rfc3986'
-alias gen-oidc-client-secret='podman run --rm authelia/authelia:latest authelia crypto hash generate argon2 --profile recommended --random --random.length 72 --random.charset rfc3986'
-alias gen-alphanumeric-string='podman run --rm authelia/authelia:latest authelia crypto rand --length 64 --charset alphanumeric'
 
 {{- else if eq .chezmoi.os "android" -}}
 
