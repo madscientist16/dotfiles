@@ -42,9 +42,9 @@ alias ls='eza --icons=auto --group-directories-first'
 alias ll='eza -l --icons=auto --group-directories-first --no-user'
 alias la='eza -la --icons=auto --group-directories-first --no-user'
 alias chez='chezmoi'
-alias vim='nvim'
 alias venv='python3 -m venv'
 
 {{ end }}
 
+eval "$(fzf --bash)"
 eval "$(zoxide init bash --cmd cd)"
