@@ -21,9 +21,8 @@ shopt -s extglob
 bind '"\e[A": history-substring-search-backward'
 bind '"\e[B": history-substring-search-forward'
 
-{{ if eq .chezmoi.os "linux" -}}
-
 ## ALIASES
+{{- if eq .chezmoi.os "linux" }}
 alias sudo='sudo ' # for using aliases with sudo
 alias ls='eza --icons=auto --group-directories-first'
 alias ll='eza -l --icons=auto --group-directories-first'
@@ -32,25 +31,20 @@ alias sys='systemctl'
 alias sysu='systemctl --user'
 alias fire='firewall-cmd'
 alias chez='chezmoi'
-alias vim='nvim'
-alias lg='lazygit'
 alias venv='python3 -m venv'
 
 # Flatpak
 alias protontricks='flatpak run com.github.Matoking.protontricks'
 alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
 
-{{- else if eq .chezmoi.os "android" -}}
-
-## ALIASES
+{{- else if eq .chezmoi.os "android" }}
 alias ls='eza --icons=auto --group-directories-first'
 alias ll='eza -l --icons=auto --group-directories-first --no-user'
 alias la='eza -la --icons=auto --group-directories-first --no-user'
 alias chez='chezmoi'
 alias vim='nvim'
-alias lg='lazygit'
 alias venv='python3 -m venv'
 
-{{- end }}
+{{ end }}
 
 eval "$(zoxide init bash --cmd cd)"
