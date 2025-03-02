@@ -1,0 +1,31 @@
+if status is-interactive
+    ## ALIASES & ABBREVIATIONS
+{{- if eq .chezmoi.os "linux" }}
+    abbr -a ls eza --icons=auto --group-directories-first
+    abbr -a ll eza -l --icons=auto --group-directories-first
+    abbr -a la eza -la --icons=auto --group-directories-first
+    abbr -a sys systemctl
+    abbr -a sysu systemctl --user
+    abbr -a fire firewall-cmd
+    abbr -a chez chezmoi
+    abbr -a venv python3 -m venv
+
+    # Flatpak
+    abbr -a protontricks flatpak run com.github.Matoking.protontricks
+    abbr -a protontricks-launch flatpak run --command=protontricks-launch com.github.Matoking.protontricks
+
+{{- else if eq .chezmoi.os "android" -}}
+
+    abbr -a ls eza --icons=auto --group-directories-first
+    abbr -a ll eza -l --icons=auto --group-directories-first --no-user
+    abbr -a la eza -la --icons=auto --group-directories-first --no-user
+    abbr -a sys systemctl
+    abbr -a sysu systemctl --user
+    abbr -a fire firewall-cmd
+    abbr -a chez chezmoi
+    abbr -a venv python3 -m venv
+
+{{- end }}
+
+    zoxide init fish | source
+end

@@ -1,6 +1,7 @@
 {{ if eq .chezmoi.os "android" -}}
 
 .config/*
+!.config/fish
 !.config/git
 !.config/nvim
 !.config/tealdeer
