@@ -1,8 +1,18 @@
 # vim: set ft=fish:
 
+if status --is-login
+    ## ENVIRONMENT VARIABLES
+{{- if eq .chezmoi.os "android" }}
+    fish_add_path ~/.local/bin
+    set -gx EDITOR nvim
+    set -gx VISUAL $EDITOR
+
+{{- end }}
+end
+
 if status is-interactive
     ## SETTINGS
-    # Disable default greeting
+    # Disable greeting
     set -g fish_greeting
 
     ## ALIASES & ABBREVIATIONS
@@ -27,7 +37,7 @@ if status is-interactive
     abbr -a chez chezmoi
     abbr -a venv python3 -m venv
 
-{{ end }}
+{{- end }}
 
     fzf --fish | source
     zoxide init fish --cmd cd | source
