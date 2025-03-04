@@ -21,6 +21,7 @@ export EDITOR="nvim"
 export VISUAL=$EDITOR
 
 {{- end }}
+
 {{ if eq .chezmoi.hostname "laptop" -}}
 
 # Old laptop with Arch Linux
@@ -76,6 +77,7 @@ alias chez='chezmoi'
 alias venv='python3 -m venv'
 
 {{- end }}
+
 {{ if eq .chezmoi.hostname "laptop" -}}
 
 # Old laptop with Arch Linux

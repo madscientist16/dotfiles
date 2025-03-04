@@ -16,6 +16,7 @@ set -gx EDITOR nvim
 set -gx VISUAL $EDITOR
 
 {{- end }}
+
 {{ if eq .chezmoi.hostname "laptop" -}}
 
 # Old laptop with Arch Linux
@@ -54,6 +55,7 @@ if status is-interactive
     abbr -a venv python3 -m venv
 
     {{- end }}
+
     {{ if eq .chezmoi.hostname "laptop" -}}
 
     # Old laptop with Arch Linux
