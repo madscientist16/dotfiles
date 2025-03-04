@@ -21,8 +21,7 @@ export EDITOR="nvim"
 export VISUAL=$EDITOR
 
 {{- end }}
-
-{{- if eq .chezmoi.hostname "laptop" -}}
+{{ if eq .chezmoi.hostname "laptop" -}}
 
 # Old laptop with Arch Linux
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket" # for systemd ssh agent
@@ -77,8 +76,7 @@ alias chez='chezmoi'
 alias venv='python3 -m venv'
 
 {{- end }}
-
-{{- if eq .chezmoi.hostname "laptop" -}}
+{{ if eq .chezmoi.hostname "laptop" -}}
 
 # Old laptop with Arch Linux
 alias update-mirrors='sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak \
