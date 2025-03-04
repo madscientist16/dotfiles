@@ -1,4 +1,2 @@
-# vim: set ft=bash:
-
 # Source ~/.bashrc
 [[ -f ~/.bashrc ]] && . ~/.bashrc

@@ -1,13 +1,13 @@
 ## Video
 profile=default
 vo=gpu-next
-{{ if eq .chezmoi.hostname "laptop" }}
-
+{{- if eq .chezmoi.hostname "laptop" }}
 vulkan-device="Intel(R) HD Graphics 530 (SKL GT2)"
 gpu-api=vulkan
 hwdec=vaapi
 
-{{ end }}
+{{- end }}
+
 ## General
 fullscreen=yes
 keep-open=yes
