@@ -22,6 +22,14 @@ export VISUAL=$EDITOR
 
 {{- end }}
 
+{{- if eq .chezmoi.hostname "laptop" -}}
+
+# Old laptop with Arch Linux
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket" # for systemd ssh agent
+export STEAM_FORCE_DESKTOPUI_SCALING=1.5
+
+{{- end }}
+
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
@@ -67,6 +75,15 @@ alias ll='eza -l --icons=auto --group-directories-first --no-user'
 alias la='eza -la --icons=auto --group-directories-first --no-user'
 alias chez='chezmoi'
 alias venv='python3 -m venv'
+
+{{- end }}
+
+{{- if eq .chezmoi.hostname "laptop" -}}
+
+# Old laptop with Arch Linux
+alias update-mirrors='sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak \
+    && rate-mirrors --protocol https arch --max-delay 3600 | sudo tee /etc/pacman.d/mirrorlist'
+alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
 
 {{- end }}
 
