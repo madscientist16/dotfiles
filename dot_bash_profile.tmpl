@@ -4,14 +4,16 @@
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 
 ## ENVIRONMENT VARIABLES
-{{- if eq .chezmoi.os "linux" }}
+{{ if eq .chezmoi.os "linux" -}}
+
 export PATH="$HOME/.local/bin:$HOME/stl/prefix:$HOME/.cargo/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL=$EDITOR
 export DIFFPROG="meld"
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
 
-{{- else if eq .chezmoi.os "android" }}
+{{- else if eq .chezmoi.os "android" -}}
+
 export PATH="$HOME/.local/bin:$PATH"
 export EDITOR="nvim"
 export VISUAL=$EDITOR

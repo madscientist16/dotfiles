@@ -2,19 +2,21 @@
 
 if status --is-login
     ## ENVIRONMENT VARIABLES
-{{- if eq .chezmoi.os "linux" }}
+    {{ if eq .chezmoi.os "linux" -}}
+
     fish_add_path ~/.local/bin ~/stl/prefix ~/.cargo/bin
     set -gx EDITOR nvim
     set -gx VISUAL $EDITOR
     set -gx DIFFPROG meld
     set -gx WINEDLLOVERRIDES winemenubuilder.exe=d
 
-{{- else if eq .chezmoi.os "android" }}
+    {{- else if eq .chezmoi.os "android" -}}
+
     fish_add_path ~/.local/bin
     set -gx EDITOR nvim
     set -gx VISUAL $EDITOR
 
-{{- end }}
+    {{- end }}
 end
 
 if status is-interactive
@@ -23,7 +25,8 @@ if status is-interactive
     set -g fish_greeting
 
     ## ALIASES & ABBREVIATIONS
-{{- if eq .chezmoi.os "linux" }}
+    {{ if eq .chezmoi.os "linux" -}}
+
     alias ls='eza --icons=auto --group-directories-first'
     alias ll='eza -l --icons=auto --group-directories-first'
     alias la='eza -la --icons=auto --group-directories-first'
@@ -37,14 +40,15 @@ if status is-interactive
     alias protontricks='flatpak run com.github.Matoking.protontricks'
     alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
 
-{{- else if eq .chezmoi.os "android" }}
+    {{- else if eq .chezmoi.os "android" -}}
+
     alias ls='eza --icons=auto --group-directories-first'
     alias ll='eza -l --icons=auto --group-directories-first --no-user'
     alias la='eza -la --icons=auto --group-directories-first --no-user'
     abbr -a chez chezmoi
     abbr -a venv python3 -m venv
 
-{{- end }}
+    {{- end }}
 
     fzf --fish | source
     zoxide init fish --cmd cd | source
