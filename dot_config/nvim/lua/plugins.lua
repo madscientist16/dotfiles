@@ -2,10 +2,10 @@
 
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
--- Load immediately in a safe manner
 now(function() require('mini.icons').setup() end)
 now(function() require('mini.statusline').setup() end)
 
+-- Set colorscheme
 now(function()
   add({
     source = 'catppuccin/nvim',
@@ -18,20 +18,22 @@ now(function()
   vim.cmd.colorscheme 'catppuccin'
 end)
 
+-- Highlight, edit, and navigate code
 now(function()
   add({
     source = 'nvim-treesitter/nvim-treesitter',
     hooks = { post_checkout = function() vim.cmd('TSUpdate') end }
   })
-  require'nvim-treesitter.configs'.setup {
-  ensure_installed = { 'c', 'lua', 'vimdoc', 'markdown', 'markdown_inline' },
+  require('nvim-treesitter.configs').setup({
+    ensure_installed = { 'c', 'lua', 'vimdoc', 'markdown', 'markdown_inline' },
 
-  auto_install = true,
+    auto_install = true,
 
-  highlight = { enable = true },
-}
+    highlight = { enable = true },
+  })
 end)
 
+-- Fuzzy Finder (files, lsp, etc)
 now(function()
   add({
     source = 'nvim-telescope/telescope.nvim',
@@ -39,7 +41,7 @@ now(function()
     depends = { 'nvim-lua/plenary.nvim' },
   })
   -- See `:help telescope.builtin`
-  local builtin = require 'telescope.builtin'
+  local builtin = require('telescope.builtin')
   vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
   vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
   vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
@@ -66,15 +68,32 @@ now(function()
   end, { desc = '[S]earch [N]eovim files' })
 end)
 
+-- LSP Plugins
+now(function()
+  add('williamboman/mason.nvim')
+  require('mason').setup()
+end)
+
+now(function()
+  add('williamboman/mason-lspconfig.nvim')
+  require('mason-lspconfig').setup()
+end)
+
+now(function()
+  add('neovim/nvim-lspconfig')
+end)
+
+-- Highlight, list and search todo comments
 now(function()
   add({
     source = 'folke/todo-comments.nvim',
     depends = { 'nvim-lua/plenary.nvim' },
   })
 end)
-now(function() add({ source = 'tpope/vim-sleuth' }) end)
 
--- Load later in a safe manner
+-- Heuristically set buffer options
+now(function() add('tpope/vim-sleuth') end)
+
 later(function() require('mini.comment').setup() end)
 later(function() require('mini.files').setup() end)
 later(function() require('mini.indentscope').setup() end)
