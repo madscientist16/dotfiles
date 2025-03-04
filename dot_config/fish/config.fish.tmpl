@@ -1,23 +1,21 @@
 # vim: set ft=fish:
 
-if status --is-login
-    ## ENVIRONMENT VARIABLES
-    {{ if eq .chezmoi.os "linux" -}}
+## ENVIRONMENT VARIABLES
+{{ if eq .chezmoi.os "linux" -}}
 
-    fish_add_path ~/.local/bin ~/stl/prefix ~/.cargo/bin
-    set -gx EDITOR nvim
-    set -gx VISUAL $EDITOR
-    set -gx DIFFPROG meld
-    set -gx WINEDLLOVERRIDES winemenubuilder.exe=d
+fish_add_path ~/.local/bin ~/stl/prefix ~/.cargo/bin
+set -gx EDITOR nvim
+set -gx VISUAL $EDITOR
+set -gx DIFFPROG meld
+set -gx WINEDLLOVERRIDES winemenubuilder.exe=d
 
-    {{- else if eq .chezmoi.os "android" -}}
+{{- else if eq .chezmoi.os "android" -}}
 
-    fish_add_path ~/.local/bin
-    set -gx EDITOR nvim
-    set -gx VISUAL $EDITOR
+fish_add_path ~/.local/bin
+set -gx EDITOR nvim
+set -gx VISUAL $EDITOR
 
-    {{- end }}
-end
+{{- end }}
 
 if status is-interactive
     ## SETTINGS
