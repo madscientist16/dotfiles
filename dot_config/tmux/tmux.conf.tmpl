@@ -7,3 +7,10 @@ set -ag terminal-overrides ",$TERM:Tc"
 
 # Enable mouse
 set -g mouse on
+
+{{- if eq .chezmoi.os "linux" }}
+
+# Set default shell
+set -g default-shell /usr/bin/fish
+
+{{- end}}
