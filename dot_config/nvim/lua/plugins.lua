@@ -92,6 +92,12 @@ end)
 -- vim-sleuth
 now(function() add('tpope/vim-sleuth') end)
 
+-- nvim-ts-autotag
+now(function()
+  add('windwp/nvim-ts-autotag')
+  require('nvim-ts-autotag').setup()
+end)
+
 -- mini.nvim
 later(function() require('mini.comment').setup() end)
 later(function() require('mini.files').setup() end)
