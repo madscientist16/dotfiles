@@ -2,7 +2,7 @@
 
 ## ENVIRONMENT VARIABLES
 {{- if eq .chezmoi.os "linux" }}
-fish_add_path ~/.local/bin ~/stl/prefix ~/.cargo/bin
+fish_add_path ~/.local/bin ~/stl/prefix ~/.cargo/bin ~/.local/share/fnm
 set -gx EDITOR nvim
 set -gx VISUAL $EDITOR
 set -gx DIFFPROG meld
@@ -61,4 +61,8 @@ if status is-interactive
 
     fzf --fish | source
     zoxide init fish --cmd cd | source
+
+    {{- if eq .chezmoi.os "linux" }}
+    fnm env --use-on-cd --shell fish | source
+    {{- end }}
 end

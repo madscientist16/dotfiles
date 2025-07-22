@@ -2,8 +2,8 @@
 
 ## ENVIRONMENT VARIABLES
 {{- if eq .chezmoi.os "linux" }}
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/stl/prefix:$HOME/.cargo/bin:" ]]; then
-    PATH="$HOME/.local/bin:$HOME/stl/prefix:$HOME/.cargo/bin:$PATH"
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/stl/prefix:$HOME/.cargo/bin:$HOME/.local/share/fnm:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/stl/prefix:$HOME/.cargo/bin:$HOME/.local/share/fnm:$PATH"
 fi
 export PATH
 export EDITOR="nvim"
@@ -102,3 +102,7 @@ alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
 
 eval "$(fzf --bash)"
 eval "$(zoxide init bash --cmd cd)"
+
+{{- if eq .chezmoi.os "linux" }}
+eval "$(fnm env --use-on-cd --shell bash)"
+{{- end }}
