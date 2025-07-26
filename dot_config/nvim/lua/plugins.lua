@@ -41,8 +41,18 @@ now(function()
     checkout = 'main',
     hooks = { post_checkout = function() vim.cmd('TSUpdate') end },
   })
+
+  require('nvim-treesitter').install({
+    'bash',
+    'css',
+    'html',
+    'lua',
+    'vim',
+    'vimdoc'
+  })
 end)
 
+-- Telescope
 now(function()
   add({
     source = 'nvim-telescope/telescope.nvim',
@@ -75,6 +85,13 @@ now(function()
   vim.keymap.set('n', '<leader>sn', function()
     builtin.find_files { cwd = vim.fn.stdpath 'config' }
   end, { desc = '[S]earch [N]eovim files' })
+end)
+
+-- LSP
+now(function()
+  add({
+    source = 'neovim/nvim-lspconfig',
+  })
 end)
 
 -- mini.nvim
