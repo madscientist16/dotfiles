@@ -38,6 +38,9 @@ later(function()
       miniclue.gen_clues.registers(),
       miniclue.gen_clues.windows(),
       miniclue.gen_clues.z(),
+
+      -- Leader clues
+      { mode = 'n', keys = '<Leader>s', desc = '[S]earch' },
     },
 
     triggers = {
@@ -86,10 +89,12 @@ later(function()
 end)
 
 later(function()
-  require('mini.indentscope').setup()
+  require('mini.icons').setup()
+  MiniIcons.mock_nvim_web_devicons()
 end)
+
 later(function()
-  require('mini.pairs').setup()
+  require('mini.indentscope').setup()
 end)
 
 -- Colorscheme
@@ -109,10 +114,12 @@ later(function()
       end,
     },
   }
+
   require('nvim-treesitter').install {
     'c',
     'css',
     'html',
+    'javascript',
     'lua',
     'markdown',
     'markdown_inline',
@@ -133,12 +140,12 @@ end)
 later(function()
   add 'stevearc/conform.nvim'
   require('conform').setup {
-    -- Set formatters by filetype
     formatters_by_ft = {
       css = { 'prettier' },
       html = { 'prettier' },
       javascript = { 'prettier' },
       lua = { 'stylua' },
+      python = { 'autopep8' },
     },
 
     format_on_save = {
@@ -148,13 +155,21 @@ later(function()
   }
 end)
 
--- LSP config
+-- LSP Config
 later(function()
   add 'neovim/nvim-lspconfig'
   vim.lsp.enable {
     'basedpyright',
     'emmet_language_server',
     'lua_ls',
+  }
+
+  -- Diagnostic Config
+  vim.diagnostic.config {
+    virtual_text = {
+      source = 'if_many',
+      spacing = 2,
+    },
   }
 end)
 
@@ -176,6 +191,7 @@ later(function()
     depends = { 'rafamadriz/friendly-snippets' },
     checkout = 'v1.6.0',
   }
+
   require('blink.cmp').setup {
     -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
     -- 'super-tab' for mappings similar to vscode (tab to accept)
@@ -215,10 +231,33 @@ later(function()
   }
 end)
 
--- Telescope (Fuzzy finder)
+-- Telescope (Fuzzy Finder)
 later(function()
+  local function build(args)
+    vim.system({ 'make', '-C', args.path }, { text = true }):wait()
+  end
+
   add {
     source = 'nvim-telescope/telescope.nvim',
-    depends = { 'nvim-lua/plenary.nvim' },
+    depends = {
+      'nvim-lua/plenary.nvim',
+      {
+        source = 'nvim-telescope/telescope-fzf-native.nvim',
+        hooks = {
+          post_install = build,
+          post_checkout = build,
+        },
+      },
+    },
   }
+
+  -- Add keymaps for telescope
+  local builtin = require 'telescope.builtin'
+  vim.keymap.set('n', '<Leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+  vim.keymap.set('n', '<Leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+  vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+  vim.keymap.set('n', '<Leader>sn', function()
+    builtin.find_files { cwd = vim.fn.stdpath 'config' }
+  end, { desc = '[S]earch [N]eovim files' })
+  vim.keymap.set('n', '<leader>sb', builtin.buffers, { desc = '[S]earch [B]uffers' })
 end)

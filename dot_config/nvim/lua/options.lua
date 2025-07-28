@@ -23,8 +23,9 @@ vim.o.cursorline = true
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.o.scrolloff = 10
 
--- Show <tab> and trailing spaces
+-- Whitespace characters
 vim.o.list = true
+vim.o.listchars = 'tab:>-,trail:.,nbsp:-'
 
 -- if performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s) See `:help 'confirm'`
@@ -41,6 +42,7 @@ vim.o.expandtab = true
 vim.o.shiftwidth = 4
 
 -- Splits
+vim.o.splitright = true
 vim.o.splitbelow = true
 
 -- Substitution preview
@@ -48,3 +50,6 @@ vim.o.inccommand = 'split'
 
 -- Don't show mode since it's visible on the statusline
 vim.o.showmode = false
+
+-- Don't show signs
+vim.o.signcolumn = 'no'
