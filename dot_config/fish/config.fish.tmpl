@@ -7,19 +7,16 @@ set -gx EDITOR nvim
 set -gx VISUAL $EDITOR
 set -gx DIFFPROG meld
 set -gx WINEDLLOVERRIDES winemenubuilder.exe=d
-
 {{- else if eq .chezmoi.os "android" }}
 fish_add_path ~/.local/bin
 set -gx EDITOR nvim
 set -gx VISUAL $EDITOR
-
 {{- end }}
 {{- if eq .chezmoi.hostname "laptop" }}
 
 # Old laptop with Arch Linux
 set -gx SSH_AUTH_SOCK $XDG_RUNTIME_DIR/ssh-agent.socket # for systemd ssh agent
 set -gx STEAM_FORCE_DESKTOPUI_SCALING 1.5
-
 {{- end }}
 
 if status is-interactive
@@ -37,18 +34,18 @@ if status is-interactive
     abbr -a fire firewall-cmd
     abbr -a chez chezmoi
     abbr -a venv python3 -m venv
+    abbr -a vim nvim
 
     # Flatpak
     alias protontricks='flatpak run com.github.Matoking.protontricks'
     alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-
     {{- else if eq .chezmoi.os "android" }}
     alias ls='eza --icons=auto --group-directories-first'
     alias ll='eza -l --icons=auto --group-directories-first --no-user'
     alias la='eza -la --icons=auto --group-directories-first --no-user'
     abbr -a chez chezmoi
     abbr -a venv python3 -m venv
-
+    abbr -a vim nvim
     {{- end }}
     {{- if eq .chezmoi.hostname "laptop" }}
 
@@ -56,12 +53,10 @@ if status is-interactive
     alias update-mirrors='sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak \
         && rate-mirrors --protocol https arch --max-delay 3600 | sudo tee /etc/pacman.d/mirrorlist'
     alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
-
     {{- end }}
 
     fzf --fish | source
     zoxide init fish --cmd cd | source
-
     {{- if eq .chezmoi.os "linux" }}
     fnm env --use-on-cd --shell fish | source
     {{- end }}

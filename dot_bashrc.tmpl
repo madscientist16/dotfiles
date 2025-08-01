@@ -9,7 +9,6 @@ export PATH
 export EDITOR="nvim"
 export VISUAL=$EDITOR
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
-
 {{- else if eq .chezmoi.os "android" }}
 if ! [[ "$PATH" =~ "$HOME/.local/bin:" ]]; then
     PATH="$HOME/.local/bin:$PATH"
@@ -17,14 +16,12 @@ fi
 export PATH
 export EDITOR="nvim"
 export VISUAL=$EDITOR
-
 {{- end }}
 {{- if eq .chezmoi.hostname "laptop" }}
 
 # Old laptop with Arch Linux
 export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket" # for systemd ssh agent
 export STEAM_FORCE_DESKTOPUI_SCALING=1.5
-
 {{- end }}
 
 # If not running interactively, don't do anything
@@ -78,18 +75,18 @@ alias sysu='systemctl --user'
 alias fire='firewall-cmd'
 alias chez='chezmoi'
 alias venv='python3 -m venv'
+alias vim='nvim'
 
 # Flatpak
 alias protontricks='flatpak run com.github.Matoking.protontricks'
 alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-
 {{- else if eq .chezmoi.os "android" }}
 alias ls='eza --icons=auto --group-directories-first'
 alias ll='eza -l --icons=auto --group-directories-first --no-user'
 alias la='eza -la --icons=auto --group-directories-first --no-user'
 alias chez='chezmoi'
 alias venv='python3 -m venv'
-
+alias vim='nvim'
 {{- end }}
 {{- if eq .chezmoi.hostname "laptop" }}
 
@@ -97,12 +94,10 @@ alias venv='python3 -m venv'
 alias update-mirrors='sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak \
     && rate-mirrors --protocol https arch --max-delay 3600 | sudo tee /etc/pacman.d/mirrorlist'
 alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
-
 {{- end }}
 
 eval "$(fzf --bash)"
 eval "$(zoxide init bash --cmd cd)"
-
 {{- if eq .chezmoi.os "linux" }}
 eval "$(fnm env --use-on-cd --shell bash)"
 {{- end }}
