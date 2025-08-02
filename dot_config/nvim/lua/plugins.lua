@@ -1,5 +1,5 @@
 -- [ Plugins ]
-
+-- Clone 'mini.nvim' manually in a way that it gets managed by 'mini.deps'
 local path_package = vim.fn.stdpath "data" .. "/site/"
 local mini_path = path_package .. "pack/deps/start/mini.nvim"
 if not vim.loop.fs_stat(mini_path) then
@@ -16,14 +16,26 @@ if not vim.loop.fs_stat(mini_path) then
   vim.cmd 'echo "Installed `mini.nvim`" | redraw'
 end
 
+-- Set up 'mini.deps'
 require("mini.deps").setup { path = { package = path_package } }
 
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
+-- Colorscheme
+now(function()
+  add { source = "catppuccin/nvim", name = "catppuccin" }
+  vim.cmd.colorscheme "catppuccin"
+end)
+
 -- mini.nvim
 now(function()
-  require("mini.statusline").setup()
+  require("mini.icons").setup()
+  MiniIcons.mock_nvim_web_devicons()
 end)
+
+now(function() require("mini.notify").setup() end)
+now(function() require("mini.statusline").setup() end)
+later(function() require("mini.pairs").setup() end)
 
 later(function()
   local miniclue = require "mini.clue"
@@ -83,7 +95,9 @@ end)
 
 later(function()
   require("mini.extra").setup()
+
   local pickers = MiniExtra.pickers
+
   vim.keymap.set("n", "<Leader>s.", pickers.oldfiles, { desc = "Search recent files" })
   vim.keymap.set("n", "<Leader>sd", pickers.diagnostic, { desc = "Search diagnostics" })
   vim.keymap.set("n", "<Leader>sk", pickers.keymaps, { desc = "Search keymaps" })
@@ -91,46 +105,36 @@ end)
 
 later(function()
   require("mini.files").setup()
+
   local function minifiles_toggle()
     if not MiniFiles.close() then
       MiniFiles.open()
     end
   end
+
   vim.keymap.set("n", "<Leader>e", minifiles_toggle, { desc = "Toggle file explorer" })
-end)
-
-later(function()
-  require("mini.icons").setup()
-  MiniIcons.mock_nvim_web_devicons()
-end)
-
-later(function()
-  require("mini.indentscope").setup()
-end)
-
-later(function()
-  require("mini.pairs").setup()
 end)
 
 later(function()
   require("mini.pick").setup()
 
   local builtin = MiniPick.builtin
+
   vim.keymap.set("n", "<Leader>sf", builtin.files, { desc = "Search files" })
   vim.keymap.set("n", "<Leader>sh", builtin.help, { desc = "Search help" })
-
-  vim.keymap.set("n", "<Leader>sn", function()
-    MiniPick.builtin.files({}, {
-      source = { cwd = vim.fn.stdpath "config" },
-    })
-  end, { desc = "Search neovim configs" })
+  vim.keymap.set(
+    "n",
+    "<Leader>sn",
+    function()
+      MiniPick.builtin.files({}, {
+        source = { cwd = vim.fn.stdpath "config" },
+      })
+    end,
+    { desc = "Search neovim configs" }
+  )
 end)
 
--- Colorscheme
-now(function()
-  add { source = "catppuccin/nvim", name = "catppuccin" }
-  vim.cmd "colorscheme catppuccin"
-end)
+later(function() require("mini.indentscope").setup() end)
 
 -- Tree-sitter
 later(function()
@@ -138,9 +142,7 @@ later(function()
     source = "nvim-treesitter/nvim-treesitter",
     checkout = "main",
     hooks = {
-      post_checkout = function()
-        vim.cmd "TSUpdate"
-      end,
+      post_checkout = function() vim.cmd "TSUpdate" end,
     },
   }
 
@@ -250,49 +252,20 @@ later(function()
   }
 end)
 
--- Autocompletion
+-- Completion
 later(function()
   add {
     source = "saghen/blink.cmp",
     depends = { "rafamadriz/friendly-snippets" },
     checkout = "v1.6.0",
   }
-
   require("blink.cmp").setup {
-    -- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-    -- 'super-tab' for mappings similar to vscode (tab to accept)
-    -- 'enter' for enter to accept
-    -- 'none' for no mappings
-    --
-    -- All presets have the following mappings:
-    -- C-space: Open menu or open docs if already open
-    -- C-n/C-p or Up/Down: Select next/previous item
-    -- C-e: Hide menu
-    -- C-k: Toggle signature help (if signature.enabled = true)
-    --
-    -- See :h blink-cmp-config-keymap for defining your own keymap
-    keymap = { preset = "default" },
-
-    appearance = {
-      -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-      -- Adjusts spacing to ensure icons are aligned
-      nerd_font_variant = "mono",
+    completion = {
+      menu = {
+        draw = {
+          columns = { { "label", "label_description", gap = 1 }, { "kind_icon" }, { "kind" } },
+        },
+      },
     },
-
-    -- (Default) Only show the documentation popup when manually triggered
-    completion = { documentation = { auto_show = false } },
-
-    -- Default list of enabled providers defined so that you can extend it
-    -- elsewhere in your config, without redefining it, due to `opts_extend`
-    sources = {
-      default = { "lsp", "path", "snippets", "buffer" },
-    },
-
-    -- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-    -- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-    -- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-    --
-    -- See the fuzzy documentation for more information
-    fuzzy = { implementation = "prefer_rust_with_warning" },
   }
 end)

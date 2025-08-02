@@ -4,7 +4,7 @@ vim.o.relativenumber = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.cursorline = true
-vim.o.scrolloff = 5
+vim.o.scrolloff = 10
 vim.o.list = true
 vim.o.listchars = "tab:» ,trail:·,nbsp:␣"
 vim.o.confirm = true
@@ -19,7 +19,9 @@ vim.o.signcolumn = "yes:1"
 vim.o.winborder = "rounded"
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
+vim.o.breakindent = true -- Indent wrapped lines
 
+-- Sync system clipboard
 vim.schedule(function()
   vim.o.clipboard = "unnamedplus"
 end)

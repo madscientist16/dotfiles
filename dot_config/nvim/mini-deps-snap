@@ -1,14 +1,11 @@
 return {
   ["blink.cmp"] = "bae4bae0eedd1fa55f34b685862e94a222d5c6f8",
-  catppuccin = "84336e08415858f6d835835e81a4f79e585463c6",
+  catppuccin = "f67971cd3e30dd94061da8d61ee34742d43c632a",
   ["conform.nvim"] = "973f3cb73887d510321653044791d7937c7ec0fa",
   ["friendly-snippets"] = "572f5660cf05f8cd8834e096d7b4c921ba18e175",
   ["lazydev.nvim"] = "2367a6c0a01eb9edb0464731cc0fb61ed9ab9d2c",
-  ["mason.nvim"] = "197f6352c276bbc2d25541dfce00ec50d1a4e88f",
-  ["mini.nvim"] = "c122e852517adaf7257688e435369c050da113b1",
-  ["nvim-lspconfig"] = "4d3b3bb8815fbe37bcaf3dbdb12a22382bc11ebe",
-  ["nvim-treesitter"] = "b26b4258294c742c2613a7d98fe53014d1c8fe49",
-  ["plenary.nvim"] = "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
-  ["telescope-fzf-native.nvim"] = "1f08ed60cafc8f6168b72b80be2b2ea149813e55",
-  ["telescope.nvim"] = "b4da76be54691e854d3e0e02c36b0245f945c2c7"
+  ["mason.nvim"] = "9e25c98d4826998460926f8c5c2284848d80ae89",
+  ["mini.nvim"] = "efff26174ca363c059f92e906753db47e81d870b",
+  ["nvim-lspconfig"] = "d0dbf489a8810672fa9a61f4a86e5cf89214b772",
+  ["nvim-treesitter"] = "3561e1fb19bcd9f03ba074d769a8a78d01717b19"
 }
