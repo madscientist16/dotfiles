@@ -1,40 +1,28 @@
--- [ Plugins ]
--- Clone 'mini.nvim' manually in a way that it gets managed by 'mini.deps'
-local path_package = vim.fn.stdpath "data" .. "/site/"
-local mini_path = path_package .. "pack/deps/start/mini.nvim"
-if not vim.loop.fs_stat(mini_path) then
-  vim.cmd 'echo "Installing `mini.nvim`" | redraw'
-  local clone_cmd = {
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/echasnovski/mini.nvim",
-    mini_path,
-  }
-  vim.fn.system(clone_cmd)
-  vim.cmd "packadd mini.nvim | helptags ALL"
-  vim.cmd 'echo "Installed `mini.nvim`" | redraw'
-end
-
--- Set up 'mini.deps'
-require("mini.deps").setup { path = { package = path_package } }
-
 local add, now, later = MiniDeps.add, MiniDeps.now, MiniDeps.later
 
+-- [ Load now ]
 -- Colorscheme
 now(function()
   add { source = "catppuccin/nvim", name = "catppuccin" }
   vim.cmd.colorscheme "catppuccin"
 end)
 
--- mini.nvim
+-- Icons
 now(function()
   require("mini.icons").setup()
   MiniIcons.mock_nvim_web_devicons()
 end)
 
-now(function() require("mini.notify").setup() end)
+-- Notifications
+now(function()
+  require("mini.notify").setup()
+  vim.notify = MiniNotify.make_notify()
+end)
+
+-- Statusline
 now(function() require("mini.statusline").setup() end)
+
+-- [ Load later ]
 later(function() require("mini.pairs").setup() end)
 
 later(function()
@@ -43,8 +31,9 @@ later(function()
     clues = {
       -- Leader clues
       { mode = "n", keys = "<Leader>d", desc = "[D]iagnostics" },
-      { mode = "n", keys = "<Leader>s", desc = "[S]earch" },
       { mode = "n", keys = "<Leader>g", desc = "[G]it" },
+      { mode = "n", keys = "<Leader>s", desc = "[S]earch" },
+      { mode = "n", keys = "<Leader>t", desc = "[T]oggle" },
 
       miniclue.gen_clues.builtin_completion(),
       miniclue.gen_clues.g(),
@@ -105,14 +94,11 @@ end)
 
 later(function()
   require("mini.files").setup()
-
-  local function minifiles_toggle()
+  vim.keymap.set("n", "<Leader>e", function()
     if not MiniFiles.close() then
       MiniFiles.open()
     end
-  end
-
-  vim.keymap.set("n", "<Leader>e", minifiles_toggle, { desc = "Toggle file explorer" })
+  end, { desc = "Toggle file explorer" })
 end)
 
 later(function()
@@ -145,7 +131,6 @@ later(function()
       post_checkout = function() vim.cmd "TSUpdate" end,
     },
   }
-
   require("nvim-treesitter").install {
     "bash",
     "c",
@@ -164,7 +149,7 @@ later(function()
   }
 end)
 
--- Installing language servers, debug adapters, linters and formatters
+-- Install language servers, debug adapters, linters and formatters
 later(function()
   add "mason-org/mason.nvim"
   require("mason").setup()
@@ -180,14 +165,6 @@ later(function()
     "html",
     "ruff",
     "lua_ls",
-  }
-
-  -- Diagnostic Config
-  vim.diagnostic.config {
-    virtual_text = {
-      source = "if_many",
-      spacing = 2,
-    },
   }
 
   -- Python
@@ -244,7 +221,6 @@ later(function()
       lua = { "stylua" },
       python = { "ruff_fix", "ruff_formatter", "ruff_organize_imports" },
     },
-
     format_on_save = {
       timeout_ms = 500,
       lsp_format = "fallback",
