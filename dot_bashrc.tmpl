@@ -98,6 +98,6 @@ alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
 
 eval "$(fzf --bash)"
 eval "$(zoxide init bash --cmd cd)"
-{{- if eq .chezmoi.os "linux" }}
+{{- if eq .chezmoi.hostname "fedora" }}
 eval "$(fnm env --use-on-cd --shell bash)"
 {{- end }}
