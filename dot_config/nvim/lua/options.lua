@@ -3,11 +3,8 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- [ General ]
-vim.o.confirm = true
 vim.o.mouse = "a" -- Enable mouse
 vim.o.undofile = true -- Save undo history
-vim.o.updatetime = 250
-vim.o.timeoutlen = 300
 
 -- Sync system clipboard
 vim.schedule(function() vim.o.clipboard = "unnamedplus" end)
@@ -44,11 +41,9 @@ vim.api.nvim_create_autocmd("FocusLost", {
   group = vim.api.nvim_create_augroup("autosave", { clear = true }),
   desc = "Autosave when neovim loses focus",
   callback = function(args)
-    if vim.b.autosave and vim.bo.modifiable and vim.fn.filewritable(args.file) == 1 then
-      vim.cmd.update()
-    end
+    if vim.b.autosave and vim.bo.modifiable and vim.fn.filewritable(args.file) == 1 then vim.cmd.update() end
   end,
-  nested = true, -- Without this file won't format on save
+  nested = true, -- Without this, the file won't format on save
 })
 
 -- [ Diagnostics ]
