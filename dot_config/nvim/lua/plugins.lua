@@ -22,27 +22,43 @@ end)
 -- Statusline
 now(function() require("mini.statusline").setup() end)
 
+-- Tree-sitter
+now(function()
+  add {
+    source = "nvim-treesitter/nvim-treesitter",
+    checkout = "main",
+    hooks = {
+      post_checkout = function() vim.cmd "TSUpdate" end,
+    },
+  }
+
+  -- Install parsers
+  local ensure_installed = {
+    "bash",
+    "css",
+    "fish",
+    "gitcommit",
+    "html",
+    "javascript",
+    "lua",
+    "markdown",
+    "python",
+  }
+  require("nvim-treesitter").install(ensure_installed)
+
+  -- Enable highlighting
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = ensure_installed,
+    callback = function() vim.treesitter.start() end,
+  })
+end)
+
 -- [ Load later ]
 later(function() require("mini.pairs").setup() end)
 
 later(function()
   local miniclue = require "mini.clue"
   miniclue.setup {
-    clues = {
-      -- Leader clues
-      { mode = "n", keys = "<Leader>d", desc = "[D]iagnostics" },
-      { mode = "n", keys = "<Leader>g", desc = "[G]it" },
-      { mode = "n", keys = "<Leader>s", desc = "[S]earch" },
-      { mode = "n", keys = "<Leader>t", desc = "[T]oggle" },
-
-      miniclue.gen_clues.builtin_completion(),
-      miniclue.gen_clues.g(),
-      miniclue.gen_clues.marks(),
-      miniclue.gen_clues.registers(),
-      miniclue.gen_clues.windows(),
-      miniclue.gen_clues.z(),
-    },
-
     triggers = {
       -- Leader triggers
       { mode = "n", keys = "<Leader>" },
@@ -74,7 +90,20 @@ later(function()
       { mode = "n", keys = "z" },
       { mode = "x", keys = "z" },
     },
+    clues = {
+      -- Leader clues
+      { mode = "n", keys = "<Leader>d", desc = "[D]iagnostics" },
+      { mode = "n", keys = "<Leader>g", desc = "[G]it" },
+      { mode = "n", keys = "<Leader>s", desc = "[S]earch" },
+      { mode = "n", keys = "<Leader>t", desc = "[T]oggle" },
 
+      miniclue.gen_clues.builtin_completion(),
+      miniclue.gen_clues.g(),
+      miniclue.gen_clues.marks(),
+      miniclue.gen_clues.registers(),
+      miniclue.gen_clues.windows(),
+      miniclue.gen_clues.z(),
+    },
     window = {
       config = { width = "auto" },
       delay = 500,
@@ -84,9 +113,7 @@ end)
 
 later(function()
   require("mini.extra").setup()
-
   local pickers = MiniExtra.pickers
-
   vim.keymap.set("n", "<Leader>s.", pickers.oldfiles, { desc = "Search recent files" })
   vim.keymap.set("n", "<Leader>sd", pickers.diagnostic, { desc = "Search diagnostics" })
   vim.keymap.set("n", "<Leader>sk", pickers.keymaps, { desc = "Search keymaps" })
@@ -95,17 +122,13 @@ end)
 later(function()
   require("mini.files").setup()
   vim.keymap.set("n", "<Leader>e", function()
-    if not MiniFiles.close() then
-      MiniFiles.open()
-    end
+    if not MiniFiles.close() then MiniFiles.open() end
   end, { desc = "Toggle file explorer" })
 end)
 
 later(function()
   require("mini.pick").setup()
-
   local builtin = MiniPick.builtin
-
   vim.keymap.set("n", "<Leader>sf", builtin.files, { desc = "Search files" })
   vim.keymap.set("n", "<Leader>sh", builtin.help, { desc = "Search help" })
   vim.keymap.set(
@@ -121,33 +144,6 @@ later(function()
 end)
 
 later(function() require("mini.indentscope").setup() end)
-
--- Tree-sitter
-later(function()
-  add {
-    source = "nvim-treesitter/nvim-treesitter",
-    checkout = "main",
-    hooks = {
-      post_checkout = function() vim.cmd "TSUpdate" end,
-    },
-  }
-  require("nvim-treesitter").install {
-    "bash",
-    "c",
-    "css",
-    "fish",
-    "gitcommit",
-    "html",
-    "javascript",
-    "lua",
-    "markdown",
-    "markdown_inline",
-    "python",
-    "query",
-    "vim",
-    "vimdoc",
-  }
-end)
 
 -- Install language servers, debug adapters, linters and formatters
 later(function()
@@ -172,9 +168,7 @@ later(function()
     group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover", { clear = true }),
     callback = function(args)
       local client = vim.lsp.get_client_by_id(args.data.client_id)
-      if client == nil then
-        return
-      end
+      if client == nil then return end
       if client.name == "ruff" then
         -- Disable hover in favor of Pyright
         client.server_capabilities.hoverProvider = false
