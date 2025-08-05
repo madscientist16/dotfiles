@@ -7,19 +7,17 @@ now(function()
   vim.cmd.colorscheme "catppuccin"
 end)
 
--- Icons
 now(function()
   require("mini.icons").setup()
   MiniIcons.mock_nvim_web_devicons()
 end)
 
--- Notifications
 now(function()
   require("mini.notify").setup()
   vim.notify = MiniNotify.make_notify()
 end)
 
--- Statusline
+now(function() require("mini.starter").setup() end)
 now(function() require("mini.statusline").setup() end)
 
 -- Tree-sitter
@@ -27,13 +25,12 @@ now(function()
   add {
     source = "nvim-treesitter/nvim-treesitter",
     checkout = "main",
-    hooks = {
-      post_checkout = function() vim.cmd "TSUpdate" end,
-    },
+    hooks = { post_checkout = function() vim.cmd "TSUpdate" end },
   }
+  add { source = "nvim-treesitter/nvim-treesitter-textobjects", checkout = "main" }
 
-  -- Install parsers
-  local ensure_installed = {
+  -- Install parsers and queries
+  local parsers = {
     "bash",
     "css",
     "fish",
@@ -44,16 +41,18 @@ now(function()
     "markdown",
     "python",
   }
-  require("nvim-treesitter").install(ensure_installed)
+  require("nvim-treesitter").install(parsers)
 
   -- Enable highlighting
+  local filetypes = vim.iter(parsers):map(vim.treesitter.language.get_filetypes):flatten():totable()
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = ensure_installed,
+    pattern = filetypes,
     callback = function() vim.treesitter.start() end,
   })
 end)
 
 -- [ Load later ]
+later(function() require("mini.extra").setup() end)
 later(function() require("mini.pairs").setup() end)
 
 later(function()
@@ -104,19 +103,8 @@ later(function()
       miniclue.gen_clues.windows(),
       miniclue.gen_clues.z(),
     },
-    window = {
-      config = { width = "auto" },
-      delay = 500,
-    },
+    window = { delay = 500 },
   }
-end)
-
-later(function()
-  require("mini.extra").setup()
-  local pickers = MiniExtra.pickers
-  vim.keymap.set("n", "<Leader>s.", pickers.oldfiles, { desc = "Search recent files" })
-  vim.keymap.set("n", "<Leader>sd", pickers.diagnostic, { desc = "Search diagnostics" })
-  vim.keymap.set("n", "<Leader>sk", pickers.keymaps, { desc = "Search keymaps" })
 end)
 
 later(function()
@@ -128,7 +116,7 @@ end)
 
 later(function()
   require("mini.pick").setup()
-  local builtin = MiniPick.builtin
+  local builtin, pickers = MiniPick.builtin, MiniExtra.pickers
   vim.keymap.set("n", "<Leader>sf", builtin.files, { desc = "Search files" })
   vim.keymap.set("n", "<Leader>sh", builtin.help, { desc = "Search help" })
   vim.keymap.set(
@@ -141,8 +129,12 @@ later(function()
     end,
     { desc = "Search neovim configs" }
   )
+  vim.keymap.set("n", "<Leader>s.", pickers.oldfiles, { desc = "Search recent files" })
+  vim.keymap.set("n", "<Leader>sd", pickers.diagnostic, { desc = "Search diagnostics" })
+  vim.keymap.set("n", "<Leader>sk", pickers.keymaps, { desc = "Search keymaps" })
 end)
 
+later(function() require("mini.surround").setup() end)
 later(function() require("mini.indentscope").setup() end)
 
 -- Install language servers, debug adapters, linters and formatters
@@ -170,20 +162,17 @@ later(function()
       local client = vim.lsp.get_client_by_id(args.data.client_id)
       if client == nil then return end
       if client.name == "ruff" then
-        -- Disable hover in favor of Pyright
+        -- Disable hover in favor of basedpyright
         client.server_capabilities.hoverProvider = false
       end
     end,
     desc = "LSP: Disable hover capability from Ruff",
   })
-
-  require("lspconfig").pyright.setup {
+  require("lspconfig").basedpyright.setup {
     settings = {
-      pyright = {
+      basedpyright = {
         -- Using Ruff's import organizer
         disableOrganizeImports = true,
-      },
-      python = {
         analysis = {
           -- Ignore all files for analysis to exclusively use Ruff for linting
           ignore = { "*" },
