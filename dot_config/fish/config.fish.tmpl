@@ -1,17 +1,9 @@
 # vim: set ft=fish:
-
 ## ENVIRONMENT VARIABLES
-{{- if eq .chezmoi.os "linux" }}
-fish_add_path ~/.local/bin ~/stl/prefix ~/.cargo/bin ~/.local/share/fnm
+fish_add_path ~/.local/share/fnm ~/.cargo/bin ~/.local/bin
 set -gx EDITOR nvim
 set -gx VISUAL $EDITOR
-set -gx DIFFPROG meld
 set -gx WINEDLLOVERRIDES winemenubuilder.exe=d
-{{- else if eq .chezmoi.os "android" }}
-fish_add_path ~/.local/bin
-set -gx EDITOR nvim
-set -gx VISUAL $EDITOR
-{{- end }}
 {{- if eq .chezmoi.hostname "laptop" }}
 
 # Old laptop with Arch Linux
@@ -25,28 +17,26 @@ if status is-interactive
     set -g fish_greeting
 
     ## ALIASES & ABBREVIATIONS
+    alias ll='eza -l --icons=auto --group-directories-first'
     {{- if eq .chezmoi.os "linux" }}
     alias ls='eza --icons=auto --group-directories-first'
-    alias ll='eza -l --icons=auto --group-directories-first'
     alias la='eza -la --icons=auto --group-directories-first'
-    abbr -a sys systemctl
+    {{- else if eq .chezmoi.os "android" }}
+    alias ll='eza -l --icons=auto --group-directories-first --no-user'
+    alias la='eza -la --icons=auto --group-directories-first --no-user'
+    {{- end }}
+    abbr -a sys --position anywhere systemctl
     abbr -a sysu systemctl --user
-    abbr -a fire firewall-cmd
+    abbr -a fire --position anywhere firewall-cmd
+    abbr -a che chezmoi
     abbr -a chez chezmoi
     abbr -a venv python3 -m venv
+    abbr -a vi nvim
     abbr -a vim nvim
 
     # Flatpak
     alias protontricks='flatpak run com.github.Matoking.protontricks'
     alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-    {{- else if eq .chezmoi.os "android" }}
-    alias ls='eza --icons=auto --group-directories-first'
-    alias ll='eza -l --icons=auto --group-directories-first --no-user'
-    alias la='eza -la --icons=auto --group-directories-first --no-user'
-    abbr -a chez chezmoi
-    abbr -a venv python3 -m venv
-    abbr -a vim nvim
-    {{- end }}
     {{- if eq .chezmoi.hostname "laptop" }}
 
     # Old laptop with Arch Linux

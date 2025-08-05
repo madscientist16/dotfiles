@@ -1,22 +1,33 @@
 # vim: set ft=bash:
+{{- if eq .chezmoi.hostname "fedora" }}
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+{{- end }}
+
+# Add to PATH without duplicate entries
+pathmunge () {
+    case ":${PATH}:" in
+        *:"$1":*)
+            ;;
+        *)
+            if [ "$2" = "after" ] ; then
+                PATH=$PATH:$1
+            else
+                PATH=$1:$PATH
+            fi
+    esac
+}
 
 ## ENVIRONMENT VARIABLES
-{{- if eq .chezmoi.os "linux" }}
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/stl/prefix:$HOME/.cargo/bin:$HOME/.local/share/fnm:" ]]; then
-    PATH="$HOME/.local/bin:$HOME/stl/prefix:$HOME/.cargo/bin:$HOME/.local/share/fnm:$PATH"
-fi
+pathmunge $HOME/.local/share/fnm
+pathmunge $HOME/.cargo/bin
+pathmunge $HOME/.local/bin
 export PATH
 export EDITOR="nvim"
 export VISUAL=$EDITOR
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
-{{- else if eq .chezmoi.os "android" }}
-if ! [[ "$PATH" =~ "$HOME/.local/bin:" ]]; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-export PATH
-export EDITOR="nvim"
-export VISUAL=$EDITOR
-{{- end }}
 {{- if eq .chezmoi.hostname "laptop" }}
 
 # Old laptop with Arch Linux
@@ -29,26 +40,25 @@ export STEAM_FORCE_DESKTOPUI_SCALING=1.5
 
 ## SETTINGS
 # Prompt
-green=$'\e[38;5;2m'
-bright_red=$'\e[38;5;9m'
-bright_green=$'\e[38;5;10m'
-reset=$'\e[0m'
+GREEN=$'\e[38;5;2m'
+BRIGHT_RED=$'\e[38;5;9m'
+BRIGHT_GREEN=$'\e[38;5;10m'
+RESET=$'\e[0m'
 
-prompt_command()
-{
+prompt_command() {
     local exit_status=$?
 
     if [[ $exit_status != 0 ]]; then
-        exit_color=$bright_red
+        exit_color=$BRIGHT_RED
         exit_prompt=" [$exit_status]"
     else
-        exit_color=$bright_green
+        exit_color=$BRIGHT_GREEN
         exit_prompt=""
     fi
 }
 
 PROMPT_COMMAND=prompt_command
-PS1='\[$green\]\w\[$exit_color\]$exit_prompt ❯ \[$reset\]'
+PS1='\[$GREEN\]\w\[$exit_color\]$exit_prompt ❯ \[$RESET\]'
 
 # History
 HISTSIZE=1000
@@ -65,29 +75,27 @@ bind '"\e[A": history-substring-search-backward'
 bind '"\e[B": history-substring-search-forward'
 
 ## ALIASES
-{{- if eq .chezmoi.os "linux" }}
 alias sudo='sudo ' # for using aliases with sudo
 alias ls='eza --icons=auto --group-directories-first'
+{{- if eq .chezmoi.os "linux" }}
 alias ll='eza -l --icons=auto --group-directories-first'
 alias la='eza -la --icons=auto --group-directories-first'
+{{- else if eq .chezmoi.os "android" }}
+alias ll='eza -l --icons=auto --group-directories-first --no-user'
+alias la='eza -la --icons=auto --group-directories-first --no-user'
+{{- end }}
 alias sys='systemctl'
 alias sysu='systemctl --user'
 alias fire='firewall-cmd'
+alias che='chezmoi'
 alias chez='chezmoi'
 alias venv='python3 -m venv'
+alias vi='nvim'
 alias vim='nvim'
 
 # Flatpak
 alias protontricks='flatpak run com.github.Matoking.protontricks'
 alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-{{- else if eq .chezmoi.os "android" }}
-alias ls='eza --icons=auto --group-directories-first'
-alias ll='eza -l --icons=auto --group-directories-first --no-user'
-alias la='eza -la --icons=auto --group-directories-first --no-user'
-alias chez='chezmoi'
-alias venv='python3 -m venv'
-alias vim='nvim'
-{{- end }}
 {{- if eq .chezmoi.hostname "laptop" }}
 
 # Old laptop with Arch Linux
