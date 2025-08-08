@@ -17,7 +17,6 @@ now(function()
   vim.notify = MiniNotify.make_notify()
 end)
 
-now(function() require("mini.starter").setup() end)
 now(function() require("mini.statusline").setup() end)
 
 -- Tree-sitter
@@ -44,10 +43,20 @@ now(function()
   require("nvim-treesitter").install(parsers)
 
   -- Enable highlighting
-  local filetypes = vim.iter(parsers):map(vim.treesitter.language.get_filetypes):flatten():totable()
+  local treesitter_group = vim.api.nvim_create_augroup("treesitter", { clear = true })
+  local hl_filetypes = vim.iter(parsers):map(vim.treesitter.language.get_filetypes):flatten():totable()
   vim.api.nvim_create_autocmd("FileType", {
-    pattern = filetypes,
+    group = treesitter_group,
+    pattern = hl_filetypes,
     callback = function() vim.treesitter.start() end,
+  })
+
+  -- Enable indentation
+  local indent_filetypes = "python"
+  vim.api.nvim_create_autocmd("FileType", {
+    group = treesitter_group,
+    pattern = indent_filetypes,
+    callback = function() vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end,
   })
 end)
 
@@ -60,8 +69,8 @@ later(function()
   miniclue.setup {
     triggers = {
       -- Leader triggers
-      { mode = "n", keys = "<Leader>" },
-      { mode = "x", keys = "<Leader>" },
+      { mode = "n", keys = "<leader>" },
+      { mode = "x", keys = "<leader>" },
 
       -- Built-in completion
       { mode = "i", keys = "<C-x>" },
@@ -91,10 +100,10 @@ later(function()
     },
     clues = {
       -- Leader clues
-      { mode = "n", keys = "<Leader>d", desc = "[D]iagnostics" },
-      { mode = "n", keys = "<Leader>g", desc = "[G]it" },
-      { mode = "n", keys = "<Leader>s", desc = "[S]earch" },
-      { mode = "n", keys = "<Leader>t", desc = "[T]oggle" },
+      { mode = "n", keys = "<leader>d", desc = "[D]iagnostics" },
+      { mode = "n", keys = "<leader>g", desc = "[G]it" },
+      { mode = "n", keys = "<leader>s", desc = "[S]earch" },
+      { mode = "n", keys = "<leader>t", desc = "[T]oggle" },
 
       miniclue.gen_clues.builtin_completion(),
       miniclue.gen_clues.g(),
@@ -109,7 +118,7 @@ end)
 
 later(function()
   require("mini.files").setup()
-  vim.keymap.set("n", "<Leader>e", function()
+  vim.keymap.set("n", "<leader>e", function()
     if not MiniFiles.close() then MiniFiles.open() end
   end, { desc = "Toggle file explorer" })
 end)
@@ -117,11 +126,11 @@ end)
 later(function()
   require("mini.pick").setup()
   local builtin, pickers = MiniPick.builtin, MiniExtra.pickers
-  vim.keymap.set("n", "<Leader>sf", builtin.files, { desc = "Search files" })
-  vim.keymap.set("n", "<Leader>sh", builtin.help, { desc = "Search help" })
+  vim.keymap.set("n", "<leader>sf", builtin.files, { desc = "Search files" })
+  vim.keymap.set("n", "<leader>sh", builtin.help, { desc = "Search help" })
   vim.keymap.set(
     "n",
-    "<Leader>sn",
+    "<leader>sn",
     function()
       MiniPick.builtin.files({}, {
         source = { cwd = vim.fn.stdpath "config" },
@@ -129,13 +138,26 @@ later(function()
     end,
     { desc = "Search neovim configs" }
   )
-  vim.keymap.set("n", "<Leader>s.", pickers.oldfiles, { desc = "Search recent files" })
-  vim.keymap.set("n", "<Leader>sd", pickers.diagnostic, { desc = "Search diagnostics" })
-  vim.keymap.set("n", "<Leader>sk", pickers.keymaps, { desc = "Search keymaps" })
+  vim.keymap.set("n", "<leader>s.", pickers.oldfiles, { desc = "Search recent files" })
+  vim.keymap.set("n", "<leader>sd", pickers.diagnostic, { desc = "Search diagnostics" })
+  vim.keymap.set("n", "<leader>sk", pickers.keymaps, { desc = "Search keymaps" })
 end)
 
 later(function() require("mini.surround").setup() end)
 later(function() require("mini.indentscope").setup() end)
+
+later(function()
+  local hipatterns = require "mini.hipatterns"
+  hipatterns.setup {
+    highlighters = {
+      -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
+      fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
+      hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
+      todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
+      note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
+    },
+  }
+end)
 
 -- Install language servers, debug adapters, linters and formatters
 later(function()
@@ -168,18 +190,6 @@ later(function()
     end,
     desc = "LSP: Disable hover capability from Ruff",
   })
-  require("lspconfig").basedpyright.setup {
-    settings = {
-      basedpyright = {
-        -- Using Ruff's import organizer
-        disableOrganizeImports = true,
-        analysis = {
-          -- Ignore all files for analysis to exclusively use Ruff for linting
-          ignore = { "*" },
-        },
-      },
-    },
-  }
 end)
 
 -- LuaLS for Neovim
@@ -202,7 +212,7 @@ later(function()
       html = { "prettier" },
       javascript = { "prettier" },
       lua = { "stylua" },
-      python = { "ruff_fix", "ruff_formatter", "ruff_organize_imports" },
+      python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
     },
     format_on_save = {
       timeout_ms = 500,

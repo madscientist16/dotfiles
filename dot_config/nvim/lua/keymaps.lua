@@ -19,7 +19,7 @@ vim.keymap.set("i", "<A-l>", "<Right>", { desc = "Move cursor right" })
 
 -- [ Toggles ]
 -- Toggle autosave
-vim.keymap.set("n", "<Leader>ta", function()
+vim.keymap.set("n", "<leader>ta", function()
   if not vim.b.autosave then
     vim.b.autosave = true
     vim.notify "Autosave on"
@@ -29,20 +29,28 @@ vim.keymap.set("n", "<Leader>ta", function()
   end
 end, { desc = "Toggle autosave" })
 
+-- Toggle relative line numbers
+vim.keymap.set(
+  "n",
+  "<leader>tr",
+  function() vim.o.relativenumber = not vim.o.relativenumber end,
+  { desc = "Toggle relative line numbers" }
+)
+
 -- Toggle wrap
-vim.keymap.set("n", "<Leader>tw", function() vim.o.wrap = not vim.o.wrap end, { desc = "Toggle wrap" })
+vim.keymap.set("n", "<leader>tw", function() vim.o.wrap = not vim.o.wrap end, { desc = "Toggle wrap" })
 
 -- [ Other ]
 -- Turn off search highlights with <Esc>
-vim.keymap.set("n", "<Esc>", "<Cmd>nohlsearch<CR>")
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
 -- Execute lua code
-vim.keymap.set("n", "<Leader><Leader>x", "<Cmd>source<CR>", { desc = "Execute file" })
-vim.keymap.set("n", "<Leader>x", ":.lua<CR>", { desc = "Execute current line" })
-vim.keymap.set("v", "<Leader>x", ":lua<CR>", { desc = "Execute selection" })
+vim.keymap.set("n", "<leader><leader>x", "<cmd>source<CR>", { desc = "Execute file" })
+vim.keymap.set("n", "<leader>x", ":.lua<CR>", { desc = "Execute current line" })
+vim.keymap.set("v", "<leader>x", ":lua<CR>", { desc = "Execute selection" })
 
 -- Open quickfix list
-vim.keymap.set("n", "<Leader>q", vim.diagnostic.setloclist, { desc = "Open quickfix list" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open quickfix list" })
 
 -- Save file
 vim.keymap.set({ "n", "v", "i" }, "<C-s>", "<Esc>:update<CR>", { desc = "Save file" })
