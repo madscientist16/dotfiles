@@ -39,7 +39,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function() vim.hl.on_yank() end,
 })
 
-vim.api.nvim_create_autocmd("FocusLost", {
+vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
   group = vim.api.nvim_create_augroup("autosave", { clear = true }),
   desc = "Autosave when Neovim loses focus",
   callback = function(ev)
