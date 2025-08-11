@@ -25,9 +25,9 @@ if status is-interactive
     alias ll='eza -l --icons=auto --group-directories-first --no-user'
     alias la='eza -la --icons=auto --group-directories-first --no-user'
     {{- end }}
-    abbr -a sys --position anywhere systemctl
+    abbr -a sys sudo systemctl
     abbr -a sysu systemctl --user
-    abbr -a fire --position anywhere firewall-cmd
+    abbr -a fire sudo firewall-cmd
     abbr -a che chezmoi
     abbr -a chez chezmoi
     abbr -a venv python3 -m venv
