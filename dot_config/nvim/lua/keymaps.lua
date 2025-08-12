@@ -18,7 +18,6 @@ vim.keymap.set("i", "<A-k>", "<Up>", { desc = "Move cursor up" })
 vim.keymap.set("i", "<A-l>", "<Right>", { desc = "Move cursor right" })
 
 -- [ Toggles ]
--- Toggle autosave
 vim.keymap.set("n", "<leader>ta", function()
   if not vim.b.autosave then
     vim.b.autosave = true
@@ -29,7 +28,6 @@ vim.keymap.set("n", "<leader>ta", function()
   end
 end, { desc = "Toggle autosave" })
 
--- Toggle relative line numbers
 vim.keymap.set(
   "n",
   "<leader>tr",
@@ -37,7 +35,6 @@ vim.keymap.set(
   { desc = "Toggle relative line numbers" }
 )
 
--- Toggle wrap
 vim.keymap.set("n", "<leader>tw", function() vim.o.wrap = not vim.o.wrap end, { desc = "Toggle wrap" })
 
 -- [ Other ]
@@ -49,12 +46,9 @@ vim.keymap.set("n", "<leader><leader>x", "<cmd>source<CR>", { desc = "Execute fi
 vim.keymap.set("n", "<leader>x", ":.lua<CR>", { desc = "Execute current line" })
 vim.keymap.set("v", "<leader>x", ":lua<CR>", { desc = "Execute selection" })
 
--- Open quickfix list
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open quickfix list" })
-
--- Save file
-vim.keymap.set({ "n", "v", "i" }, "<C-s>", "<Esc>:update<CR>", { desc = "Save file" })
+vim.keymap.set({ "n", "x", "i" }, "<C-s>", "<Esc>:update<CR>", { desc = "Save file" })
 
 -- [ Disabled ]
--- Disable s key because it interferes with mini.surround
+-- Disable the keymap for 's' because it interferes with mini.surround
 vim.keymap.set({ "n", "x" }, "s", "<Nop>")

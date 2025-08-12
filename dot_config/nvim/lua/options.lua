@@ -5,7 +5,7 @@ vim.g.maplocalleader = " "
 -- [ General ]
 vim.o.mouse = "a" -- Enable mouse
 vim.o.undofile = true -- Save undo history
-vim.o.swapfile = false
+vim.b.autosave = false -- Autosave disabled by default
 
 -- Sync clipboard between OS and Neovim
 vim.schedule(function() vim.o.clipboard = "unnamedplus" end)
@@ -16,7 +16,7 @@ vim.o.breakindent = true -- Indent wrapped lines
 vim.o.list = true
 vim.o.listchars = "tab:» ,trail:·,nbsp:␣"
 vim.o.number = true -- Show line numbers
-vim.o.relativenumber = true -- Show line number relative to cursor
+vim.o.relativenumber = true -- Show relative line numbers
 vim.o.scrolloff = 10 -- Number of lines to keep above/below cursor when scrolling
 vim.o.showmode = false -- Disabled since it's visible on the statusline
 vim.o.signcolumn = "yes:1"
@@ -41,7 +41,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost" }, {
   group = vim.api.nvim_create_augroup("autosave", { clear = true }),
-  desc = "Autosave when Neovim loses focus",
+  desc = "Autosave when Neovim or buffer loses focus",
   callback = function(ev)
     if vim.b.autosave and vim.bo.modifiable and vim.fn.filewritable(ev.match) == 1 then vim.cmd.update() end
   end,
