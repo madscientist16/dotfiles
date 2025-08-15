@@ -59,6 +59,15 @@ now(function()
 end)
 
 -- [ Load later ]
+later(function()
+  local gen_spec = require("mini.ai").gen_spec
+  require("mini.ai").setup {
+    custom_textobjects = {
+      -- Function definition (needs treesitter queries with these captures)
+      F = gen_spec.treesitter { a = "@function.outer", i = "@function.inner" },
+    },
+  }
+end)
 later(function() require("mini.extra").setup() end)
 later(function() require("mini.diff").setup() end)
 later(function() require("mini.indentscope").setup() end)
