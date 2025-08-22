@@ -13,6 +13,7 @@ vim.schedule(function() vim.o.clipboard = "unnamedplus" end)
 -- [ UI ]
 vim.o.cursorline = true -- Highlight current line
 vim.o.breakindent = true -- Indent wrapped lines
+vim.o.showbreak = "↪ "
 vim.o.list = true
 vim.o.listchars = "tab:» ,trail:·,nbsp:␣"
 vim.o.number = true -- Show line numbers
