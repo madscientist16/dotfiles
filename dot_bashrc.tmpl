@@ -28,12 +28,6 @@ export PATH
 export EDITOR="nvim"
 export VISUAL=$EDITOR
 export WINEDLLOVERRIDES="winemenubuilder.exe=d"
-{{- if eq .chezmoi.hostname "laptop" }}
-
-# Old laptop with Arch Linux
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket" # for systemd ssh agent
-export STEAM_FORCE_DESKTOPUI_SCALING=1.5
-{{- end }}
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -76,13 +70,13 @@ bind '"\e[B": history-substring-search-forward'
 
 ## ALIASES
 alias sudo='sudo ' # for using aliases with sudo
-alias ls='eza --icons=auto --group-directories-first'
+alias ls='ls -Fhv --color=auto --group-directories-first'
 {{- if eq .chezmoi.os "linux" }}
-alias ll='eza -l --icons=auto --group-directories-first'
-alias la='eza -la --icons=auto --group-directories-first'
+alias ll='ls -l'
+alias la='ls -lA'
 {{- else if eq .chezmoi.os "android" }}
-alias ll='eza -l --icons=auto --group-directories-first --no-user'
-alias la='eza -la --icons=auto --group-directories-first --no-user'
+alias ll='ls -gG'
+alias la='ls -gGA'
 {{- end }}
 alias sys='systemctl'
 alias sysu='systemctl --user'
@@ -96,13 +90,6 @@ alias vim='nvim'
 # Flatpak
 alias protontricks='flatpak run com.github.Matoking.protontricks'
 alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-{{- if eq .chezmoi.hostname "laptop" }}
-
-# Old laptop with Arch Linux
-alias update-mirrors='sudo mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.bak \
-    && rate-mirrors --protocol https arch --max-delay 3600 | sudo tee /etc/pacman.d/mirrorlist'
-alias clean-packages='sudo pacman -R $(pacman -Qtdq)'
-{{- end }}
 
 eval "$(fzf --bash)"
 eval "$(zoxide init bash --cmd cd)"
