@@ -18,16 +18,6 @@ vim.keymap.set("i", "<A-k>", "<Up>", { desc = "Move cursor up" })
 vim.keymap.set("i", "<A-l>", "<Right>", { desc = "Move cursor right" })
 
 -- [ Toggles ]
-vim.keymap.set("n", "<leader>ta", function()
-  if not vim.b.autosave then
-    vim.b.autosave = true
-    vim.notify "Autosave on"
-  else
-    vim.b.autosave = false
-    vim.notify "Autosave off"
-  end
-end, { desc = "Toggle autosave" })
-
 vim.keymap.set(
   "n",
   "<leader>tr",
@@ -48,7 +38,3 @@ vim.keymap.set("v", "<leader>x", ":lua<CR>", { desc = "Execute selection" })
 
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open quickfix list" })
 vim.keymap.set({ "n", "x", "i" }, "<C-s>", "<Esc>:update<CR>", { desc = "Save file" })
-
--- [ Disabled ]
--- Disable the keymap for 's' because it interferes with mini.surround
-vim.keymap.set({ "n", "x" }, "s", "<Nop>")

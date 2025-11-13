@@ -1,12 +1,8 @@
 return {
-  ["blink.cmp"] = "bae4bae0eedd1fa55f34b685862e94a222d5c6f8",
-  catppuccin = "76a8d0515024cc55d8bd26fc13f1af88faef3ebf",
-  ["conform.nvim"] = "973f3cb73887d510321653044791d7937c7ec0fa",
-  ["friendly-snippets"] = "572f5660cf05f8cd8834e096d7b4c921ba18e175",
-  ["lazydev.nvim"] = "2367a6c0a01eb9edb0464731cc0fb61ed9ab9d2c",
-  ["mason.nvim"] = "9e25c98d4826998460926f8c5c2284848d80ae89",
-  ["mini.nvim"] = "03387f53f1cb8c6a8ba0798041c6aa3525ed11ba",
-  ["nvim-lspconfig"] = "63a38440989c58e1f100373ab603fd24665bdc9a",
-  ["nvim-treesitter"] = "3561e1fb19bcd9f03ba074d769a8a78d01717b19",
-  ["nvim-treesitter-textobjects"] = "b54cec389e98c5b0babbe618773acec927437cab"
+  catppuccin = "234fc048de931a0e42ebcad675bf6559d75e23df",
+  ["conform.nvim"] = "cde4da5c1083d3527776fee69536107d98dae6c9",
+  ["mason.nvim"] = "ad7146aa61dcaeb54fa900144d768f040090bff0",
+  ["mini.nvim"] = "f43357be022565d969795cde29b8988d082cc913",
+  ["nvim-treesitter"] = "b50774079aa3de80a06dce1634e7e1aa26d25848",
+  ["nvim-treesitter-textobjects"] = "06c00bca434ef74add99bec62614ca20bbdff4bb"
 }

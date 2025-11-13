@@ -12,11 +12,6 @@ now(function()
   MiniIcons.mock_nvim_web_devicons()
 end)
 
-now(function()
-  require("mini.notify").setup()
-  vim.notify = MiniNotify.make_notify()
-end)
-
 now(function() require("mini.statusline").setup() end)
 
 -- Tree-sitter
@@ -31,14 +26,10 @@ now(function()
   -- Install parsers and queries
   local parsers = {
     "bash",
-    "css",
     "fish",
     "gitcommit",
-    "html",
-    "javascript",
     "lua",
     "markdown",
-    "python",
   }
   require("nvim-treesitter").install(parsers)
 
@@ -48,13 +39,6 @@ now(function()
     group = treesitter_group,
     pattern = vim.iter(parsers):map(vim.treesitter.language.get_filetypes):flatten():totable(),
     callback = function() vim.treesitter.start() end,
-  })
-
-  -- Enable indentation
-  vim.api.nvim_create_autocmd("FileType", {
-    group = treesitter_group,
-    pattern = "python",
-    callback = function() vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()" end,
   })
 end)
 
@@ -73,7 +57,6 @@ later(function() require("mini.diff").setup() end)
 later(function() require("mini.indentscope").setup() end)
 later(function() require("mini.jump").setup() end)
 later(function() require("mini.pairs").setup() end)
-later(function() require("mini.surround").setup() end)
 
 later(function()
   local miniclue = require "mini.clue"
@@ -111,8 +94,6 @@ later(function()
     },
     clues = {
       -- Leader clues
-      { mode = "n", keys = "<leader>d", desc = "[D]iagnostics" },
-      { mode = "n", keys = "<leader>g", desc = "[G]it" },
       { mode = "n", keys = "<leader>s", desc = "[S]earch" },
       { mode = "n", keys = "<leader>t", desc = "[T]oggle" },
 
@@ -132,22 +113,6 @@ later(function()
   vim.keymap.set("n", "<leader>e", function()
     if not MiniFiles.close() then MiniFiles.open() end
   end, { desc = "Toggle file explorer" })
-end)
-
-later(function()
-  local hipatterns = require "mini.hipatterns"
-  hipatterns.setup {
-    highlighters = {
-      -- Highlight standalone 'FIXME', 'HACK', 'TODO', 'NOTE'
-      fixme = { pattern = "%f[%w]()FIXME()%f[%W]", group = "MiniHipatternsFixme" },
-      hack = { pattern = "%f[%w]()HACK()%f[%W]", group = "MiniHipatternsHack" },
-      todo = { pattern = "%f[%w]()TODO()%f[%W]", group = "MiniHipatternsTodo" },
-      note = { pattern = "%f[%w]()NOTE()%f[%W]", group = "MiniHipatternsNote" },
-
-      -- Highlight hex colors
-      hex_color = hipatterns.gen_highlighter.hex_color(),
-    },
-  }
 end)
 
 later(function()
@@ -177,62 +142,16 @@ later(function()
   require("mason").setup()
 end)
 
--- LSP Config
-later(function()
-  add "neovim/nvim-lspconfig"
-  vim.lsp.enable {
-    "basedpyright",
-    "cssls",
-    "emmet_language_server",
-    "html",
-    "ruff",
-    "lua_ls",
-  }
-end)
-
--- LuaLS for Neovim
-later(function()
-  add "folke/lazydev.nvim"
-  require("lazydev").setup {
-    library = {
-      -- Load luvit types when the `vim.uv` word is found
-      { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-    },
-  }
-end)
-
 -- Formatter
 later(function()
   add "stevearc/conform.nvim"
   require("conform").setup {
     formatters_by_ft = {
-      css = { "prettier" },
-      html = { "prettier" },
-      javascript = { "prettier" },
       lua = { "stylua" },
-      python = { "ruff_fix", "ruff_format", "ruff_organize_imports" },
     },
     format_on_save = {
       timeout_ms = 500,
       lsp_format = "fallback",
-    },
-  }
-end)
-
--- Completion
-later(function()
-  add {
-    source = "saghen/blink.cmp",
-    depends = { "rafamadriz/friendly-snippets" },
-    checkout = "v1.6.0",
-  }
-  require("blink.cmp").setup {
-    completion = {
-      menu = {
-        draw = {
-          columns = { { "label", "label_description", gap = 1 }, { "kind_icon" }, { "kind" } },
-        },
-      },
     },
   }
 end)
