@@ -1,8 +1,0 @@
-return {
-  catppuccin = "234fc048de931a0e42ebcad675bf6559d75e23df",
-  ["conform.nvim"] = "cde4da5c1083d3527776fee69536107d98dae6c9",
-  ["mason.nvim"] = "ad7146aa61dcaeb54fa900144d768f040090bff0",
-  ["mini.nvim"] = "f43357be022565d969795cde29b8988d082cc913",
-  ["nvim-treesitter"] = "b50774079aa3de80a06dce1634e7e1aa26d25848",
-  ["nvim-treesitter-textobjects"] = "06c00bca434ef74add99bec62614ca20bbdff4bb"
-}
